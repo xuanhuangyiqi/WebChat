@@ -1,7 +1,6 @@
 #coding: utf-8
 import tornado.web
 import tornado.websocket
-import tornado.escape.xhtml_escape
 from config import SITE,static_path
 
 class Index(tornado.web.RequestHandler):
@@ -45,8 +44,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_message(self, message):
         for x in SocketHandler.clients:
-            mm = tornado.escape.xhtml_escape(message)
-            m = "%s:%s<br />"%(self.get_cookie("nickname").decode('utf-8'), mm)
+            m = "%s:%s<br />"%(self.get_cookie("nickname").decode('utf-8'), message)
             x.write_message(m)
 
     def on_close(self):
