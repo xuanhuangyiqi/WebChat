@@ -53,6 +53,7 @@
         </style>
         <script>
             var ws = new WebSocket('ws://{{ site }}/socket');
+            var _title = document.title;
             ws.onmessage = function(event) { show(event.data); };
             ws.onclose = function (event) { show('连接中断'); }
             ws.onerror = function (event) { show('连接错误');};
@@ -66,7 +67,13 @@
             function show(msg)
             {
                 document.getElementById('message').innerHTML = '<div class="ch-inject">'+msg+'</div><div style="height: 10px"></div>'+ document.getElementById('message').innerHTML;
+                if (!(document.webkitVisibilityState === undefined || document.webkitVisibilityState === "visible"))
+                    document.title = '新消息 '+ _title;
             }
+            function visibilityFunction(){
+                if (document.webkitVisibilityState === "visible") document.title = _title;
+            };
+            document.addEventListener( "webkitvisibilitychange", visibilityFunction );
             function logout() { self.location='/logout'; }
             function press() { if (event.keyCode==13) send(); }
         </script>
