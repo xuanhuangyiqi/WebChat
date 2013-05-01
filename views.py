@@ -39,8 +39,8 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         nick = self.get_cookie("nickname")
         for x in SocketHandler.clients:
             x.write_message('%s 来了'%nick)
+        self.write_message('你好, %s！在线的人有%s'%(nick, ','.join([x.get_cookie("nickname") for x in SocketHandler.clients])))
         SocketHandler.clients.add(self)
-        self.write_message('你好, %s!'%nick)
 
     def on_message(self, message):
         for x in SocketHandler.clients:
