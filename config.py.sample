@@ -1,0 +1,2 @@
+SITE = "localhost:8000"
+static_path = "static/"

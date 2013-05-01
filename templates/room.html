@@ -1,0 +1,86 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>聊天室</title>
+        <style type="text/css">
+            pre {
+                width: 500px; margin: 0 auto; background: #222; padding: 20px;
+                font-size: 22px; color: #555; text-shadow: 0px 2px 3px #171717;
+                -webkit-box-shadow: 0px 2px 3px #555;
+                -moz-box-shadow: 0px 2px 3px #555;
+                -webkit-border-radius: 10px;
+                -moz-border-radius: 10px;
+                }
+            * { margin, padding: 0; }
+
+            input {
+                margin: 20px auto;
+                width: 500px; height: 50px; padding: 5px 20px 0px 20px;  
+                background: #FFF;
+                background: -moz-linear-gradient(top, #2a2a2a 0%, #5E768D 20%); /* firefox */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2a2a2a), color-stop(20%,#2a2a2a)); /* webkit */
+                border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;
+                -moz-box-shadow: 0px 1px 0px #f2f2f2;-webkit-box-shadow: 0px 1px 0px #f2f2f2;
+                font-family: sans-serif; font-size: 16px; color: #f2f2f2; text-transform: uppercase; text-shadow: 0px -1px 0px #334f71; 
+            }
+                input::-webkit-input-placeholder  {
+                    color: #a1b2c3; text-shadow: 0px -1px 0px #38506b;  
+                }
+                input:-moz-placeholder {
+                    color: #a1b2c3; text-shadow: 0px -1px 0px #38506b; 
+                }
+            body {
+                background: #474747 url({{ static }}bg.png);
+                    margin: 70px;
+                }
+            span a {
+                margin: 0 10px;
+                text-decoration: none;
+                font: 20px Helvetica, Arial, Sans-Serif; letter-spacing: 0;  
+                color: #999; text-shadow: 0px 3px 8px #2a2a2a;
+                }
+            span a:hover {
+                color: #a0a0a0; text-shadow: 0px 5px 8px #2a2a2a;
+            }
+
+            #chat_box
+            {
+                text-align: center;
+                margin: 20px auto;
+            }
+        </style>
+        <script>
+            var ws = new WebSocket('ws://{{ site }}/socket');
+        ws.onmessage = function(event)
+        {
+            document.getElementById('message').innerHTML = '<pre class="ch-inject">'+event.data+'</pre><div style="height: 10px"></div>'+ document.getElementById('message').innerHTML;
+        };
+
+        function send()
+        {
+            var message = document.getElementById('chat').value;
+            if (message != "") ws.send(message);
+            document.getElementById('chat').value='';
+        }
+        function logout()
+        {
+            self.location='/logout';
+        }
+        function press()
+        {
+            if (event.keyCode==13)
+                send();
+        }
+        </script>
+    </head>
+
+    <body onkeydown="press()">
+        <div id="chat_box">
+            <input type="text" id="chat">
+            <span id="submit" onclick="send()"><a href="#">发送</a></span>
+            <span id="logout" onclick="logout()" ><a href="#">退出</a></span>
+        </div>
+        <div id="message">
+        </div>
+    </body>
+</html>
