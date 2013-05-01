@@ -53,26 +53,22 @@
         </style>
         <script>
             var ws = new WebSocket('ws://{{ site }}/socket');
-        ws.onmessage = function(event)
-        {
-            document.getElementById('message').innerHTML = '<div class="ch-inject">'+event.data+'</div><div style="height: 10px"></div>'+ document.getElementById('message').innerHTML;
-        };
+            ws.onmessage = function(event) { show(event.data); };
+            ws.onclose = function (event) { show('连接中断'); }
+            ws.onerror = function (event) { show('连接错误');};
 
-        function send()
-        {
-            var message = document.getElementById('chat').value;
-            if (message != "") ws.send(message);
-            document.getElementById('chat').value='';
-        }
-        function logout()
-        {
-            self.location='/logout';
-        }
-        function press()
-        {
-            if (event.keyCode==13)
-                send();
-        }
+            function send()
+            {
+                var message = document.getElementById('chat').value;
+                if (message != "") ws.send(message);
+                document.getElementById('chat').value='';
+            }
+            function show(msg)
+            {
+                document.getElementById('message').innerHTML = '<div class="ch-inject">'+msg+'</div><div style="height: 10px"></div>'+ document.getElementById('message').innerHTML;
+            }
+            function logout() { self.location='/logout'; }
+            function press() { if (event.keyCode==13) send(); }
         </script>
     </head>
 
